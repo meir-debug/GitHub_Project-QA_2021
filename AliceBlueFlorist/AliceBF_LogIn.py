@@ -6,8 +6,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import unittest
 import Helpers as Hp
+import unittest
+import AllureReports
+
+
+# import HtmlTestRunner
 
 
 class LogIn(unittest.TestCase):
@@ -62,10 +66,27 @@ class LogIn(unittest.TestCase):
         elem(By.XPATH, "//span[@class='_1Qjd7'][contains(.,'Sign up with email')]").click()
         Hp.delay()
         elem(By.XPATH, Hp.input_em).clear()
-        elem(By.XPATH, Hp.input_em).send_keys(Hp.fake.email())
+        elem(By.XPATH, Hp.input_em).send_keys("meir.bar.shay+6@gmail.com")  # Hp.fake.email()
         elem(By.XPATH, Hp.input_pas).clear()
-        elem(By.XPATH, Hp.input_pas).send_keys(Hp.fake.ean(length=8) + Keys.ENTER)
+        elem(By.XPATH, Hp.input_pas).send_keys("1987365TY" + Keys.ENTER)  # Hp.fake.ean(length=8)
         time.sleep(10)
+        try:
+            wait.until(EC.visibility_of_element_located((By.XPATH, Hp.input_em)))
+            print("Loading took too much time!")
+            driver.get_screenshot_as_file(Hp.error_png)
+            driver.save_screenshot(Hp.error_png)
+        except TE:
+            print("Everything is fine!!!")
 
     def tearDown(self):
         self.driver.quit()
+
+
+# if __name__ == '__main__':
+#     unittest.main(
+#         testRunner=HtmlTestRunner.HTMLTestRunner(output='./HtmlReports'))
+
+if __name__ == '__main__':
+    unittest.main(AllureReports)
+
+# py.test --alluredir=./AllureReports ./unittest4.py
